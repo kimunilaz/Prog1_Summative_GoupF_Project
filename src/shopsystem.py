@@ -1,7 +1,10 @@
-from product import Product  # your existing Product class
-from class import Sale       # your existing Sale class
-from datetime import datetime
+# shopsystem.py
+
 import csv
+from datetime import datetime
+from product import Product   # your existing Product class
+from sale import Sale         # your existing Sale class
+
 class ShopSystem:
     def __init__(self):
         self.products = []  # list of Product objects
@@ -23,7 +26,7 @@ class ShopSystem:
                             datetime.strptime(row['expiry_date'], "%Y-%m-%d").date()
                         )
                         self.products.append(product)
-                    except ValueError as e:
+                    except (ValueError, KeyError) as e:
                         print(f"Bad data in row {row}: {e}")
         except FileNotFoundError:
             print(f"{filename} not found. Starting with empty product list.")
@@ -60,7 +63,7 @@ class ShopSystem:
                             datetime.strptime(row['date_of_sale'], "%Y-%m-%d").date()
                         )
                         self.sales.append(sale)
-                    except ValueError as e:
+                    except (ValueError, KeyError) as e:
                         print(f"Bad data in row {row}: {e}")
         except FileNotFoundError:
             print(f"{filename} not found. Starting with empty sales list.")
@@ -81,3 +84,33 @@ class ShopSystem:
         except Exception as e:
             print(f"Error saving sales: {e}")
 
+
+# ----------------- DEMO -----------------
+if __name__ == "__main__":
+    shop = ShopSystem()
+
+    # Load existing data (or start empty if missing)
+    shop.load_products()
+    shop.load_sales()
+
+    print("Products Loaded:")
+    for p in shop.products:
+        print(vars(p))
+
+    print("\nSales Loaded:")
+    for s in shop.sales:
+        print(vars(s))
+
+    # Example: Add a new product and sale
+    from datetime import date
+    new_product = Product("P003", "Bread", 1200, 15, date(2026, 1, 10))
+    shop.products.append(new_product)
+
+    new_sale = Sale("S003", "P003", 2, date.today())
+    shop.sales.append(new_sale)
+
+    # Save changes back to CSV
+    shop.save_products()
+    shop.save_sales()
+
+    print("\nProducts and Sales saved successfully!")
