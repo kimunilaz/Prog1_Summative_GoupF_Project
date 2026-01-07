@@ -7,15 +7,6 @@ from product import Product
 # - No negative quantities allowed.
 # - Expired products are flagged when checked.
 
-class Product:
-    def __init__(self, product_id, batch_number, name, price, quantity, expiry_date):
-        self.product_id = product_id
-        self.batch_number = batch_number
-        self.name = name
-        self.price = price
-        self.quantity = quantity
-        self.expiry_date = expiry_date
-
 class Inventory:
     def __init__(self, low_stock_threshold):
         self.products = {}
