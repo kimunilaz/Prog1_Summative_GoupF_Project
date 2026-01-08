@@ -1,14 +1,22 @@
-from product import Product
 # Assumptions for Inventory Class:
 # - Product has: product_id, name, price, quantity, expiry_date.
 # - Sale will call Inventory to reduce stock using product_id and quantity_sold.
 # - Inventory will store products in a dictionary keyed by product_id.
-# - Low stock threshold = 10 units.
-# - No negative quantities allowed.
+# - Low stock threshold = 5 units.
+# - No negative quantities or zero prices allowed.
 # - Expired products are flagged when checked.
 
+class Product:
+    def __init__(self, product_id, batch_number, name, price, quantity, expiry_date):
+        self.product_id = product_id
+        self.batch_number = batch_number
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+        self.expiry_date = expiry_date
+
 class Inventory:
-    def __init__(self, low_stock_threshold):
+    def __init__(self, low_stock_threshold = 10):
         self.products = {}
         self.low_stock_threshold = 10
 
@@ -31,47 +39,19 @@ class Inventory:
             print("Product not found")
             return False
 
-    def update_stock(self, product_id, batch_number, choice, quantity):
+    def update_stock(self, product_id, batch_number, quantity):
         product_key = (product_id, batch_number)
-
-        if product_key not in self.products:
-            print(f"Stock not updated. This product with ID {product_id} is not found")
-            return False
-        product = self.products[product_key]
-        choice = choice.lower()
-
-        if choice == "set new quantity":
+        if product_key in self.products:
+            product = self.products[product_key]
             if quantity >= 0:
                 product.quantity = quantity
                 print(f"Stock updated. {product.name} now has {product.quantity} units in stock")
                 return True
             else:
-                print("Quantity must be zero or greater than zero")
+                print("Quantity must be a positive integer")
                 return False
-
-        elif choice == "increase":
-            if quantity > 0:
-                product.quantity += quantity
-                print(f"Increased {product.name} stock by {quantity}")
-                return True
-            else:
-                print("Increase must be a positive integer")
-                return False
-
-        elif choice == "decrease":
-            if quantity <= 0:
-                print("Decrease must be positive")
-                return False
-            else:
-                if quantity > product.quantity:
-                    print("Quantity can not be decreased than stock available")
-                    return False
-                else:
-                    product.quantity -= quantity
-                    print(f"Decreased {product.name} stock by {quantity}")
-                    return True
         else:
-            print("Invalid choice. Must be either 'Set new quantity' or 'Increase' or 'Decrease'")
+            print(f"Stock not updated. This product is not found")
             return False
 
     def get_low_stock_products(self):
