@@ -2,7 +2,7 @@
 
 import csv
 from datetime import datetime, date
-from inventory2.0 import Inventory, Product
+from inventory2 import Inventory, Product
 from sale import Sale
 
 

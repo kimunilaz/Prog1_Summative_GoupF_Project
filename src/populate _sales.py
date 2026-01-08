@@ -1,6 +1,7 @@
 # populate_sales_extended.py
 import csv
 
+# Sample sales data
 sales = [
     {"sale_id": "S001", "product_code": "P001", "quantity_sold": 2, "date_of_sale": "2026-01-05"},
     {"sale_id": "S002", "product_code": "P002", "quantity_sold": 1, "date_of_sale": "2026-01-06"},
@@ -22,3 +23,4 @@ with open(filename, "w", newline="") as file:
         writer.writerow(s)
 
 print(f"{filename} has been populated with sales data!")
+
