@@ -1,3 +1,5 @@
+
+from datetime import date
 class Sale:
     def _init_(self, product_id, batch_number, quantity_sold, price_per_unit):
         self.product_id = product_id
