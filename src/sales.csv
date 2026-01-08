@@ -1,9 +1,1 @@
-sale_id,product_code,quantity_sold,date_of_sale
-S001,P001,2,2026-01-05
-S002,P002,1,2026-01-06
-S003,P003,5,2026-01-07
-S004,P001,1,2026-01-08
-S005,P004,2,2026-01-09
-S006,P005,12,2026-01-10
-S007,P002,3,2026-01-11
-S008,P003,2,2026-01-12
+sale_id,product_id,batch_number,quantity_sold,date_of_sale
