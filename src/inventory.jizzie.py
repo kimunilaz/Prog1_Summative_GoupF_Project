@@ -35,3 +35,7 @@ class Inventory:
                 product.quantity,
                 product.expiry_date
             )
+
+
+
+
