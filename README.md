@@ -2,13 +2,15 @@
 A simple digital inventory system helps store data accurately and makes updates easier.
 The purpose of this Python-based system is to help small shops manage products, record sales, and keep track of stock levels efficiently. 
 
-Project Overview
+**Project Overview**
 A Python-based digital inventory management system designed to help small retail shops efficiently manage products, record sales transactions, and maintain accurate stock levels. 
 This system replaces manual record-keeping with an automated solution, reducing errors and saving time for small business owners.
 Target Users:
 Small retail shop owners, store managers, and sales clerks
 
-Key Benefits:
+
+**Key Benefits:**
+
 
 Eliminates manual record-keeping errors
 
@@ -20,7 +22,9 @@ Generates automated reports
 
 Easy-to-use menu-driven interface
 
-Features
+**Features**
+
+
 1. Product Management
 
 Add new products with details (name, price, quantity, category)
@@ -32,6 +36,7 @@ Delete products from inventory
 View complete product catalog
 
 Search products by name or category
+
 
 2. Inventory Control
 
@@ -45,8 +50,9 @@ Stock valuation reports
 
 Automatic updates after sales
 
-3. Sales Recording
 
+3. Sales Recording
+   
 Process sales transactions
 
 Automatic stock deduction
@@ -57,6 +63,7 @@ Daily sales summaries
 
 Transaction history tracking
 
+
 4. Reporting & Analytics
 
 Current inventory status reports
@@ -65,18 +72,16 @@ Sales summaries (daily, weekly, monthly)
 
 Low stock alerts
 
-Product performance metrics
 
-Revenue tracking
 
-Instructions to Run the Program
+**Instructions to Run the Program**
 Prerequisites
 
 Python 3.7 or higher installed on your system
 
 No additional dependencies required (uses standard Python libraries)
 
-Installation Steps
+**Installation Steps**
 
 On cmd: 
 
@@ -87,7 +92,7 @@ On cmd:
 Run the program
     python src/main.py
 
-Troubleshooting
+**Troubleshooting**
 
 Python not found: 
 Ensure Python is installed and added to your system PATH
@@ -97,4 +102,19 @@ Make sure you're running the program from the correct directory
 
 File access errors:
 Ensure you have write permissions in the project directory
-   
+
+**Menu Structure**
+
+
+--- ShopSystem Menu ---
+ 1. View Products
+ 2. Add Product
+ 3. Make Sale
+ 4. View Sales History
+ 5. Save & Exit
+ Enter choice:
+
+
+**Sample Interactions **
+
+
