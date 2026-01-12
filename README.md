@@ -5,6 +5,7 @@ The purpose of this Python-based system is to help small shops manage products, 
 **Project Overview**
 A Python-based digital inventory management system designed to help small retail shops efficiently manage products, record sales transactions, and maintain accurate stock levels. 
 This system replaces manual record-keeping with an automated solution, reducing errors and saving time for small business owners.
+
 Target Users:
 Small retail shop owners, store managers, and sales clerks
 
@@ -75,6 +76,7 @@ Low stock alerts
 
 
 **Instructions to Run the Program**
+
 Prerequisites
 
 Python 3.7 or higher installed on your system
