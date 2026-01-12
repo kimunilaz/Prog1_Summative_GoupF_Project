@@ -11,7 +11,7 @@ class TestSale(unittest.TestCase):
       self.assertEqual(sale.batch_number, "B001")
       self.assertEqual(sale.quantity_sold, 5)
       self.assertEqual(sale.price_per_unit, 10.0)
-      self.assertEqual(sale.total_price, 50.0)  # 5 * 10
+      self.assertEqual(sale.total_price, 50.0)  
       self.assertEqual(sale.sale_date, date.today())
 
 # 2. Calculate total for quantity
@@ -26,7 +26,7 @@ class TestSale(unittest.TestCase):
 
 # 4. Sale exceeding available stock (simulate error handling)
   def test_exceeding_stock_sale(self):
-   # In real system, you'd check against inventory. Here we just simulate.
+   # In real system, I should check against inventory. Simulation only
     sale = Sale("P004", "B004", 1000, 2.0)
     self.assertEqual(sale.total_price, 2000.0)  # still calculates, but logic should prevent in ShopSystem
 
@@ -44,6 +44,7 @@ class TestSale(unittest.TestCase):
     self.assertEqual(record["quantity_sold"], 4)
     self.assertEqual(record["total_price"], 50.0)
     self.assertEqual(record["sale_date"], date.today())
+
 
 if __name__ == "__main__":
     unittest.main()
