@@ -109,11 +109,17 @@ class ShopSystem:
             print("No products available.")
             return
         print("\nID | Batch | Name | Price | Qty | Expiry")
-        print("-" * 50)
+
+        print("\nID | Batch | Name | Price | Qty | Expiry | Status")
+        print("-" * 60)
         for p in self.products:
+            status = ""
+            if p.expiry_date < date.today():
+                status = "EXPIRED"
+            elif p.expiry_date <= date.today() + timedelta(days=7):
+                status = "EXPIRING SOON"
             print(
-                f"{p.product_id} | {p.batch_number} | {p.name} | {p.price} | {p.quantity} | {p.expiry_date}"
-            )
+                f"{p.product_id} | {p.batch_number} | {p.name} | {p.price} | {p.quantity} | {p.expiry_date} | {status}")
 
     def add_product(self):
         pid = input("Product ID: ")
