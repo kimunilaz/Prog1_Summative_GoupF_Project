@@ -77,8 +77,6 @@ Low stock alerts
 
 **Instructions to Run the Program**
 
-Prerequisites
-
 Python 3.7 or higher installed on your system
 
 No additional dependencies required (uses standard Python libraries)
