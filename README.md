@@ -117,3 +117,21 @@ Ensure you have write permissions in the project directory
 **Sample Interactions**
 
 
+Viewing Products 
+
+<img width="1853" height="897" alt="Screenshot 2026-01-13 140456" src="https://github.com/user-attachments/assets/0a11eb7d-4a2f-4ecd-b3ef-2ec86c1a27c2" />
+
+
+Adding Products
+
+<img width="1821" height="806" alt="Adding a product" src="https://github.com/user-attachments/assets/69b4e443-7354-4668-8cfa-66fdaf68819a" />
+
+
+
+Updating 
+<img width="1860" height="912" alt="Updating price" src="https://github.com/user-attachments/assets/8bd41f08-02aa-46b3-a6f5-82d07c904f4d" />
+
+
+
+
+
