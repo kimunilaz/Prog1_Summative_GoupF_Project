@@ -137,15 +137,22 @@ class ShopSystem:
             print("Error adding product:", e)
 
     def update_price(self):
-        pid = input("Enter product ID to update price: ")
-        for p in self.products:
-            if p.product_id == pid:
-                new_price = float(input("Enter new price: "))
-                p.price = new_price
-                self.save_products()
-                print("Price updated and saved.")
+    pid = input("Enter product ID: ")
+    batch = input("Enter batch number: ")
+
+    for p in self.products:
+        if p.product_id == pid and p.batch_number == batch:
+            new_price = float(input("Enter new price: "))
+            if new_price <= 0:
+                print("Price must be positive.")
                 return
-        print("Product not found.")
+            p.price = new_price
+            self.save_products()
+            print("Price updated and saved.")
+            return
+
+    print("Product not found for that batch.")
+
 
     def make_sale(self):
         sale_id = input("Sale ID: ")
