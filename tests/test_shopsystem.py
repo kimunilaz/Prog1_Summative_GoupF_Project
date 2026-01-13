@@ -4,10 +4,10 @@
 
 import unittest
 from datetime import date, timedelta
-from product import Product
-from inventory import Inventory
-from sale import Sale
-from shopsystem import ShopSystem
+from src.product import Product
+from src.inventory import Inventory
+from src.sale import Sale
+from src.shopsystem import ShopSystem
 
 class TestShopSystem(unittest.TestCase):
 
