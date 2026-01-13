@@ -36,7 +36,7 @@ class Test_Product(unittest.TestCase): # Created a test suite (a collection of t
 
     # 6. Update quantity with negative number exceeding stock
     def test_invalid_quantity_update(self):
-        product = Product(J0016", "Eggs", 50, 5.0, date.today() + timedelta(days=10))
+        product = Product("J0016", "Eggs", 50, 5.0, date.today() + timedelta(days=10))
         product.update_quantity(-100)  #  Error handling
         self.assertGreaterEqual(product.quantity, 0)
 
