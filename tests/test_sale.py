@@ -4,7 +4,7 @@
 
 import unittest
 from datetime import date
-from sale import Sale
+from src.sale import Sale
 
 class TestSale(unittest.TestCase):
 
