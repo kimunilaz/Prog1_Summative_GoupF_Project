@@ -4,7 +4,7 @@
 
 import unittest
 from datetime import date, timedelta
-from inventory import Inventory, Product
+from src.inventory import Inventory, Product
 
 class TestInventory(unittest.TestCase):
     def setUp(self):
