@@ -125,7 +125,11 @@ class ShopSystem:
         pid = input("Product ID: ")
         batch = input("Batch number: ")
         name = input("Name: ")
-        price = input("Price: ")
+        price = float(input("Price: "))
+        if price <= 0:
+            print("Price must be positive.")
+            return
+
         qty = input("Quantity: ")
         expiry = input("Expiry (YYYY-MM-DD): ")
 
@@ -137,30 +141,30 @@ class ShopSystem:
             print("Error adding product:", e)
 
     def update_price(self):
-    pid = input("Enter product ID: ")
-    batch = input("Enter batch number: ")
+        pid = input("Enter product ID: ")
+        batch = input("Enter batch number: ")
 
-    for p in self.products:
-        if p.product_id == pid and p.batch_number == batch:
-            new_price = float(input("Enter new price: "))
-            if new_price <= 0:
-                print("Price must be positive.")
+        for p in self.products:
+            if p.product_id == pid and p.batch_number == batch:
+                new_price = float(input("Enter new price: "))
+                if new_price <= 0:
+                    print("Price must be positive.")
+                    return
+                p.price = new_price
+                self.save_products()
+                print("Price updated and saved.")
                 return
-            p.price = new_price
-            self.save_products()
-            print("Price updated and saved.")
-            return
 
-    print("Product not found for that batch.")
-
+        print("Product not found for that batch.")
 
     def make_sale(self):
         sale_id = input("Sale ID: ")
         pid = input("Product ID: ")
+        batch = input("Batch number: ")
         qty = int(input("Quantity sold: "))
 
         for p in self.products:
-            if p.product_id == pid:
+            if p.product_id == pid and p.batch_number == batch:
                 if p.expiry_date < date.today():
                     print("Cannot sell expired product.")
                     return
@@ -169,13 +173,13 @@ class ShopSystem:
                     return
 
                 p.quantity -= qty
-                self.sales.append(Sale(sale_id, pid, qty, date.today()))
+                self.sales.append(Sale(sale_id, f"{pid}-{batch}", qty, date.today()))
                 self.save_products()
                 self.save_sales()
                 print("Sale completed and saved.")
                 return
 
-        print("Product not found.")
+        print("Product not found for that batch.")
 
     def view_sales(self):
         if not self.sales:
@@ -185,6 +189,22 @@ class ShopSystem:
         print("-" * 40)
         for s in self.sales:
             print(f"{s.sale_id} | {s.product_code} | {s.quantity_sold} | {s.date_of_sale}")
+
+    def remove_expired_product(self):
+        pid = input("Product ID: ")
+        batch = input("Batch number: ")
+
+        for p in self.products:
+            if p.product_id == pid and p.batch_number == batch:
+                if p.expiry_date >= date.today():
+                    print("Cannot remove product: not expired.")
+                    return
+                self.products.remove(p)
+                self.save_products()
+                print("Expired product removed and saved.")
+                return
+
+        print("Product not found.")
 
     # ---------- Menu ----------
     def run(self):
@@ -198,7 +218,8 @@ class ShopSystem:
             print("3. Update Product Price")
             print("4. Make Sale")
             print("5. View Sales")
-            print("6. Save & Exit")
+            print("6. Remove Expired Product")
+            print("7. Save & Exit")
 
             choice = input("Choose option: ")
 
@@ -213,10 +234,13 @@ class ShopSystem:
             elif choice == "5":
                 self.view_sales()
             elif choice == "6":
+                self.remove_expired_product()
+            elif choice == "7":
                 self.save_products()
                 self.save_sales()
                 print("Data saved. Goodbye!")
                 break
+
             else:
                 print("Invalid choice.")
 
