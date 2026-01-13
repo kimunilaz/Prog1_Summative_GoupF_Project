@@ -129,34 +129,43 @@ class ShopSystem:
         pid = input("Product ID: ")
         batch = input("Batch number: ")
         name = input("Name: ")
+
         price = float(input("Price: "))
         if price <= 0:
             print("Price must be positive.")
             return
 
-        qty = input("Quantity: ")
+        qty = int(input("Quantity: "))
+        if qty <= 0:
+            print("Quantity must be positive.")
+            return
+
         expiry = input("Expiry (YYYY-MM-DD): ")
-
-        try:
-            self.products.append(Product(pid, batch, name, price, qty, expiry))
-            self.save_products()
-            print("Product added and saved successfully.")
-        except Exception as e:
-            print("Error adding product:", e)
-
-    def update_price(self):
-        pid = input("Enter product ID: ")
-        batch = input("Enter batch number: ")
 
         for p in self.products:
             if p.product_id == pid and p.batch_number == batch:
-                new_price = float(input("Enter new price: "))
+                p.quantity += qty
+                self.save_products()
+                print("Existing product found. Quantity updated.")
+                return
+
+        self.products.append(Product(pid, batch, name, price, qty, expiry))
+        self.save_products()
+        print("New product added successfully.")
+
+    def update_price(self):
+        pid = input("Product ID: ")
+        batch = input("Batch number: ")
+
+        for p in self.products:
+            if p.product_id == pid and p.batch_number == batch:
+                new_price = float(input("Enter the new price: "))
                 if new_price <= 0:
                     print("Price must be positive.")
                     return
                 p.price = new_price
                 self.save_products()
-                print("Price updated and saved.")
+                print("Price updated successfully.")
                 return
 
         print("Product not found for that batch.")
