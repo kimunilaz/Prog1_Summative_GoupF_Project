@@ -17,10 +17,13 @@ class Product:
 
 # ===================== Sale =====================
 class Sale:
-    def __init__(self, sale_id, product_code, quantity_sold, date_of_sale):
+    def __init__(self, sale_id, product_id, batch_number, quantity_sold, price, date_of_sale):
         self.sale_id = sale_id
-        self.product_code = product_code
+        self.product_id = product_id
+        self.batch_number = batch_number
         self.quantity_sold = int(quantity_sold)
+        self.price = float(price)
+        self.total = self.quantity_sold * self.price
         self.date_of_sale = (
             datetime.strptime(date_of_sale, "%Y-%m-%d").date()
             if isinstance(date_of_sale, str)
@@ -38,30 +41,27 @@ class ShopSystem:
         try:
             with open(filename, newline="") as file:
                 reader = csv.DictReader(file)
-                self.products = [
-                    Product(
-                        row["product_id"],
-                        row["batch_number"],
-                        row["name"],
-                        row["price"],
-                        row["quantity"],
-                        row["expiry_date"],
-                    )
-                    for row in reader
-                ]
+                self.products = []
+                for row in reader:
+                    try:
+                        if not row["price"] or not row["quantity"]:
+                                 continue
+                        self.products.append(Product(
+                            row["product_id"],
+                            row["batch_number"],
+                            row["name"],
+                            row["price"],
+                            row["quantity"],
+                            row["expiry_date"],
+                        ))
+                    except Exception:
+                        print(f"Skipping bad product row: {row}")
         except FileNotFoundError:
             print("products.csv not found. Starting empty.")
 
     def save_products(self, filename="products.csv"):
         with open(filename, "w", newline="") as file:
-            fieldnames = [
-                "product_id",
-                "batch_number",
-                "name",
-                "price",
-                "quantity",
-                "expiry_date",
-            ]
+            fieldnames = ["product_id", "batch_number", "name", "price", "quantity", "expiry_date"]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for p in self.products:
@@ -81,8 +81,10 @@ class ShopSystem:
                 self.sales = [
                     Sale(
                         row["sale_id"],
-                        row["product_code"],
+                        row["product_id"],
+                        row["batch_number"],
                         row["quantity_sold"],
+                        row["price"],
                         row["date_of_sale"],
                     )
                     for row in reader
@@ -92,106 +94,75 @@ class ShopSystem:
 
     def save_sales(self, filename="sales.csv"):
         with open(filename, "w", newline="") as file:
-            fieldnames = ["sale_id", "product_code", "quantity_sold", "date_of_sale"]
+            fieldnames = [
+                "sale_id", "product_id", "batch_number",
+                "quantity_sold", "price", "total", "date_of_sale"
+            ]
             writer = csv.DictWriter(file, fieldnames=fieldnames)
             writer.writeheader()
             for s in self.sales:
-                writer.writerow({
-                    "sale_id": s.sale_id,
-                    "product_code": s.product_code,
-                    "quantity_sold": s.quantity_sold,
-                    "date_of_sale": s.date_of_sale,
-                })
+                writer.writerow(vars(s))
 
     # ---------- Core Features ----------
     def view_products(self):
-        if not self.products:
-            print("No products available.")
-            return
-
         print("\nID | Batch | Name | Price | Qty | Expiry | Status")
-        print("-" * 60)
-
+        print("-" * 70)
         for p in self.products:
-            if p.expiry_date < date.today():
-                status = "EXPIRED"
-            elif p.expiry_date <= date.today() + timedelta(days=7):
-                status = "EXPIRING SOON"
-            else:
-                status = "OK"
-
-            print(
-                f"{p.product_id} | {p.batch_number} | {p.name} | "
-                f"{p.price} | {p.quantity} | {p.expiry_date} | {status}"
+            status = "EXPIRED" if p.expiry_date < date.today() else (
+                "EXPIRING SOON" if p.expiry_date <= date.today() + timedelta(days=7) else "OK"
             )
+            print(f"{p.product_id} | {p.batch_number} | {p.name} | {p.price} | {p.quantity} | {p.expiry_date} | {status}")
 
     def add_product(self):
         pid = input("Product ID: ")
         batch = input("Batch number: ")
         name = input("Name: ")
-<<<<<<< HEAD
-
         price = float(input("Price: "))
-        if price <= 0:
-            print("Price must be positive.")
-            return
-
         qty = int(input("Quantity: "))
-        if qty <= 0:
-            print("Quantity must be positive.")
-            return
-
-=======
-        while True:
-            try:
-                price = float(input("Enter Price: "))
-                break
-            except ValueError:
-                print("Invalid input. Please enter a number (e.g., 10.50).")
-
-        while True:
-            try:
-                qty = int(input("Quantity: "))
-                break
-            except ValueError:
-                print("Invalid input. Please enter a number (e.g., 10).")
-
->>>>>>> 1debe5488e6a1bc2848055d8a4a80f6a325f5a00
         expiry = input("Expiry (YYYY-MM-DD): ")
+
+        if price <= 0 or qty <= 0:
+            print("Price and quantity must be positive.")
+            return
 
         for p in self.products:
             if p.product_id == pid and p.batch_number == batch:
                 p.quantity += qty
                 self.save_products()
-                print("Existing product found. Quantity updated.")
+                print("Existing product batch updated.")
                 return
 
         self.products.append(Product(pid, batch, name, price, qty, expiry))
         self.save_products()
-        print("New product added successfully.")
+        print("New product added.")
 
     def update_price(self):
         pid = input("Product ID: ")
         batch = input("Batch number: ")
+        new_price = float(input("New price: "))
+
+        if new_price <= 0:
+            print("Price must be positive.")
+            return
 
         for p in self.products:
             if p.product_id == pid and p.batch_number == batch:
-                new_price = float(input("Enter the new price: "))
-                if new_price <= 0:
-                    print("Price must be positive.")
-                    return
                 p.price = new_price
                 self.save_products()
-                print("Price updated successfully.")
+                print("Price updated.")
                 return
 
-        print("Product not found for that batch.")
+        print("Product batch not found.")
 
     def make_sale(self):
         sale_id = input("Sale ID: ")
         pid = input("Product ID: ")
         batch = input("Batch number: ")
         qty = int(input("Quantity sold: "))
+
+        if qty <= 0:
+            print("Quantity must be positive.")
+            return
 
         for p in self.products:
             if p.product_id == pid and p.batch_number == batch:
@@ -203,38 +174,28 @@ class ShopSystem:
                     return
 
                 p.quantity -= qty
-                self.sales.append(Sale(sale_id, f"{pid}-{batch}", qty, date.today()))
+                sale = Sale(sale_id, pid, batch, qty, p.price, date.today())
+                self.sales.append(sale)
                 self.save_products()
                 self.save_sales()
-                print("Sale completed and saved.")
+                print(f"Sale completed. Revenue: {sale.total}")
                 return
 
-        print("Product not found for that batch.")
+        print("Product batch not found.")
 
     def view_sales(self):
-        if not self.sales:
-            print("No sales recorded.")
-            return
-        print("\nSaleID | Product | Qty | Date")
-        print("-" * 40)
+        print("\nSaleID | Product | Batch | Qty | Price | Total | Date")
+        print("-" * 70)
+        total_revenue = 0
         for s in self.sales:
-            print(f"{s.sale_id} | {s.product_code} | {s.quantity_sold} | {s.date_of_sale}")
+            total_revenue += s.total
+            print(f"{s.sale_id} | {s.product_id} | {s.batch_number} | {s.quantity_sold} | {s.price} | {s.total} | {s.date_of_sale}")
+        print(f"\nTOTAL REVENUE: {total_revenue}")
 
-    def remove_expired_product(self):
-        pid = input("Product ID: ")
-        batch = input("Batch number: ")
-
-        for p in self.products:
-            if p.product_id == pid and p.batch_number == batch:
-                if p.expiry_date >= date.today():
-                    print("Cannot remove product: not expired.")
-                    return
-                self.products.remove(p)
-                self.save_products()
-                print("Expired product removed and saved.")
-                return
-
-        print("Product not found.")
+    def remove_expired_products(self):
+        self.products = [p for p in self.products if p.expiry_date >= date.today()]
+        self.save_products()
+        print("Expired products removed.")
 
     # ---------- Menu ----------
     def run(self):
@@ -248,7 +209,7 @@ class ShopSystem:
             print("3. Update Product Price")
             print("4. Make Sale")
             print("5. View Sales")
-            print("6. Remove Expired Product")
+            print("6. Remove Expired Products")
             print("7. Save & Exit")
 
             choice = input("Choose option: ")
@@ -264,13 +225,12 @@ class ShopSystem:
             elif choice == "5":
                 self.view_sales()
             elif choice == "6":
-                self.remove_expired_product()
+                self.remove_expired_products()
             elif choice == "7":
                 self.save_products()
                 self.save_sales()
                 print("Data saved. Goodbye!")
                 break
-
             else:
                 print("Invalid choice.")
 
