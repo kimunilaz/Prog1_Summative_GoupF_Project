@@ -129,6 +129,7 @@ class ShopSystem:
         pid = input("Product ID: ")
         batch = input("Batch number: ")
         name = input("Name: ")
+<<<<<<< HEAD
 
         price = float(input("Price: "))
         if price <= 0:
@@ -140,6 +141,22 @@ class ShopSystem:
             print("Quantity must be positive.")
             return
 
+=======
+        while True:
+            try:
+                price = float(input("Enter Price: "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a number (e.g., 10.50).")
+
+        while True:
+            try:
+                qty = int(input("Quantity: "))
+                break
+            except ValueError:
+                print("Invalid input. Please enter a number (e.g., 10).")
+
+>>>>>>> 1debe5488e6a1bc2848055d8a4a80f6a325f5a00
         expiry = input("Expiry (YYYY-MM-DD): ")
 
         for p in self.products:
