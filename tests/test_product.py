@@ -1,7 +1,7 @@
 # Implementation of Product Test cases of the ShopSystsem
 import unittest # Python's built-in testing framework
 from datetime import date, timedelta # timedelta is used for time difference days=2 mean a time difference of 2 days
-from product import Product
+from src.product import Product
 class Test_Product(unittest.TestCase): # Created a test suite (a collection of test cases, test suites, or both) that groups all the product-related tests.
  # 1. Check normal product creation
     def test_product_creation(self):
