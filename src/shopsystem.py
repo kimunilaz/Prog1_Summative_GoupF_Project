@@ -113,67 +113,64 @@ class ShopSystem:
             )
             print(f"{p.product_id} | {p.batch_number} | {p.name} | {p.price} | {p.quantity} | {p.expiry_date} | {status}")
 
+    def suggest_next_product_id(self):
+        if not self.products:
+            return "P001"
+        max_id = max(int(p.product_id[1:]) for p in self.products if p.product_id.startswith("P"))
+        return f"P{max_id + 1:03d}"
+
     def add_product(self):
-        # --- Product ID ---
-        while True:
-            pid = input("Product ID: ").strip()
-            if pid:
-                break
-            print("Product ID cannot be empty.")
+        suggested_id = self.suggest_next_product_id()
+        pid = input(f"Product ID [{suggested_id}]: ").strip()
+        if not pid:
+            pid = suggested_id
 
-        # --- Batch Number ---
-        while True:
-            batch = input("Batch number: ").strip()
-            if batch:
-                break
-            print("Batch number cannot be empty.")
+        batch = input("Batch number: ").strip()
+        name = input("Name: ").strip()
 
-        # --- Name ---
-        while True:
-            name = input("Name: ").strip()
-            if name:
-                break
-            print("Product name cannot be empty.")
+        if not pid or not batch or not name:
+            print("Product ID, batch number, and name cannot be empty.")
+            return
 
-        # --- Price ---
-        while True:
-            try:
-                price = float(input("Price: "))
-                if price > 0:
-                    break
-                print("Price must be a positive number.")
-            except ValueError:
-                print("Invalid price. Enter a number.")
+        try:
+            price = float(input("Price: "))
+            qty = int(input("Quantity: "))
+        except ValueError:
+            print("Price must be a number and quantity must be an integer.")
+            return
 
-        # --- Quantity ---
-        while True:
-            try:
-                qty = int(input("Quantity: "))
-                if qty > 0:
-                    break
-                print("Quantity must be a positive integer.")
-            except ValueError:
-                print("Invalid quantity. Enter a whole number.")
+        if price <= 0 or qty <= 0:
+            print("Price and quantity must be positive values.")
+            return
 
-        # --- Expiry Date ---
-        while True:
-            expiry = input("Expiry (YYYY-MM-DD): ").strip()
-            try:
-                datetime.strptime(expiry, "%Y-%m-%d")
-                break
-            except ValueError:
-                print("Invalid date format. Use YYYY-MM-DD.")
+        expiry = input("Expiry (YYYY-MM-DD): ").strip()
+        try:
+            expiry_date = datetime.strptime(expiry, "%Y-%m-%d").date()
+        except ValueError:
+            print("Invalid expiry date format.")
+            return
 
-        # --- Merge if product & batch exist ---
+        # Prevent same ID with different product name
         for p in self.products:
-            if p.product_id == pid and p.batch_number == batch:
-                p.quantity += qty
-                self.save_products()
-                print("Existing product batch updated (quantity merged).")
+            if p.product_id == pid and p.name.lower() != name.lower():
+                print("Error: This product ID is already used for a different product.")
                 return
 
-        # --- Otherwise add new product ---
-        self.products.append(Product(pid, batch, name, price, qty, expiry))
+        # Merge ONLY if everything matches (ID + batch + name + price)
+        for p in self.products:
+            if (
+                    p.product_id == pid
+                    and p.batch_number == batch
+                    and p.name.lower() == name.lower()
+                    and p.price == price
+            ):
+                p.quantity += qty
+                self.save_products()
+                print("Existing product matched exactly. Quantities merged.")
+                return
+
+        #  Otherwise, add as new product
+        self.products.append(Product(pid, batch, name, price, qty, expiry_date))
         self.save_products()
         print("New product added successfully.")
 
