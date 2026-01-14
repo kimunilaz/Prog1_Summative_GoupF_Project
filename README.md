@@ -108,9 +108,12 @@ Ensure you have write permissions in the project directory
 --- ShopSystem Menu ---
  1. View Products
  2. Add Product
- 3. Make Sale
- 4. View Sales History
- 5. Save & Exit
+ 3. Update Product Price
+ 4. Make Sale
+ 5. View Sales
+ 6. Remove Expired Product
+ 7. Save & Exit
+
  Enter choice:
 
 
