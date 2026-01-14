@@ -172,8 +172,7 @@ class ShopSystem:
         for p in self.products:
             if p.product_id == pid and p.name.lower() != name.lower():
                 print("Error: This product ID is already used for a different product.")
-                return2
-                
+                return
 
         try:
             price = float(input("Price: "))
@@ -214,7 +213,12 @@ class ShopSystem:
     def update_price(self):
         pid = input("Product ID: ")
         batch = input("Batch number: ")
-        new_price = float(input("New price: "))
+
+        try:
+            new_price = float(input("New price: "))
+        except ValueError:
+            print("Price must be a number.")
+            return
 
         if new_price <= 0:
             print("Price must be positive.")
@@ -229,11 +233,30 @@ class ShopSystem:
 
         print("Product batch not found.")
 
+    def suggest_next_sale_id(self):
+        if not self.sales:
+            return "S001"  # First sale ID
+
+        # Extract numeric part of Sale IDs that start with "S"
+        ids = [int(s.sale_id[1:]) for s in self.sales if s.sale_id.startswith("S")]
+        max_id = max(ids) if ids else 0
+        return f"S{max_id + 1:03d}"
+
     def make_sale(self):
-        sale_id = input("Sale ID: ")
+        suggested_id = self.suggest_next_sale_id()
+        sale_id = input(f"Sale ID [suggested ID: {suggested_id}]: ").strip()
+        if not sale_id:
+            sale_id = suggested_id
+
         pid = input("Product ID: ")
         batch = input("Batch number: ")
-        qty = int(input("Quantity sold: "))
+
+        # Ensure quantity is a positive integer
+        try:
+            qty = int(input("Quantity sold: "))
+        except ValueError:
+            print("Quantity must be an integer.")
+            return
 
         if qty <= 0:
             print("Quantity must be positive.")
