@@ -114,27 +114,68 @@ class ShopSystem:
             print(f"{p.product_id} | {p.batch_number} | {p.name} | {p.price} | {p.quantity} | {p.expiry_date} | {status}")
 
     def add_product(self):
-        pid = input("Product ID: ")
-        batch = input("Batch number: ")
-        name = input("Name: ")
-        price = float(input("Price: "))
-        qty = int(input("Quantity: "))
-        expiry = input("Expiry (YYYY-MM-DD): ")
+        # --- Product ID ---
+        while True:
+            pid = input("Product ID: ").strip()
+            if pid:
+                break
+            print("Product ID cannot be empty.")
 
-        if price <= 0 or qty <= 0:
-            print("Price and quantity must be positive.")
-            return
+        # --- Batch Number ---
+        while True:
+            batch = input("Batch number: ").strip()
+            if batch:
+                break
+            print("Batch number cannot be empty.")
 
+        # --- Name ---
+        while True:
+            name = input("Name: ").strip()
+            if name:
+                break
+            print("Product name cannot be empty.")
+
+        # --- Price ---
+        while True:
+            try:
+                price = float(input("Price: "))
+                if price > 0:
+                    break
+                print("Price must be a positive number.")
+            except ValueError:
+                print("Invalid price. Enter a number.")
+
+        # --- Quantity ---
+        while True:
+            try:
+                qty = int(input("Quantity: "))
+                if qty > 0:
+                    break
+                print("Quantity must be a positive integer.")
+            except ValueError:
+                print("Invalid quantity. Enter a whole number.")
+
+        # --- Expiry Date ---
+        while True:
+            expiry = input("Expiry (YYYY-MM-DD): ").strip()
+            try:
+                datetime.strptime(expiry, "%Y-%m-%d")
+                break
+            except ValueError:
+                print("Invalid date format. Use YYYY-MM-DD.")
+
+        # --- Merge if product & batch exist ---
         for p in self.products:
             if p.product_id == pid and p.batch_number == batch:
                 p.quantity += qty
                 self.save_products()
-                print("Existing product batch updated.")
+                print("Existing product batch updated (quantity merged).")
                 return
 
+        # --- Otherwise add new product ---
         self.products.append(Product(pid, batch, name, price, qty, expiry))
         self.save_products()
-        print("New product added.")
+        print("New product added successfully.")
 
     def update_price(self):
         pid = input("Product ID: ")
