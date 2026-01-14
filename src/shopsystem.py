@@ -286,6 +286,30 @@ class ShopSystem:
         self.save_products()
         print("Expired products removed and logged successfully.")
 
+    def view_removed_expired_products(self):
+        try:
+            # Try to read the removed products log
+            with open("removed_products.csv", "r", newline="") as file:
+                reader = csv.reader(file)
+                removed = list(reader)
+
+            if not removed:
+                print("\nNo expired products have been removed yet.")
+                return
+
+            # Print header
+            print("\nProductID | Name | Batch | Price | Quantity | Expiry Date | Reason Removed")
+            print("-" * 80)
+
+            for row in removed:
+                # Assuming log format: [product_id, name, batch_number, price, quantity, expiry_date, reason]
+                print(" | ".join(row))
+
+        except FileNotFoundError:
+            print("\nNo removed products log found.")
+        except Exception as e:
+            print(f"\nAn error occurred while viewing removed products: {e}")
+
     # ---------- Menu ----------
     def run(self):
         self.load_products()
@@ -297,9 +321,10 @@ class ShopSystem:
             print("2. Add Product")
             print("3. Update Product Price")
             print("4. Make Sale")
-            print("5. View Sales")
-            print("6. Remove Expired Products")
-            print("7. Save & Exit")
+            print("5. Remove Expired Products")
+            print("6. View Sales")
+            print("7. View Removed Expired Products")
+            print("8. Save & Exit")
 
             choice = input("Choose option: ")
 
@@ -312,10 +337,12 @@ class ShopSystem:
             elif choice == "4":
                 self.make_sale()
             elif choice == "5":
-                self.view_sales()
-            elif choice == "6":
                 self.remove_expired_products()
+            elif choice == "6":
+                self.view_sales()
             elif choice == "7":
+                self.view_removed_expired_products()  # instead of removing again
+            elif choice == "8":
                 self.save_products()
                 self.save_sales()
                 print("Data saved. Goodbye!")
