@@ -1,5 +1,39 @@
 import csv
 from datetime import datetime, date, timedelta
+import os
+REMOVED_FILE = "removed_products.csv"
+
+def init_removed_products_file():
+    if not os.path.exists(REMOVED_FILE):
+        with open(REMOVED_FILE, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                "product_id",
+                "batch_number",
+                "name",
+                "price",
+                "quantity",
+                "expiry_date",
+                "removal_reason",
+                "removal_date"
+            ])
+
+
+def log_removed_product(product, reason):
+    with open(REMOVED_FILE, mode="a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([
+            product.product_id,
+            product.batch_number,
+            product.name,
+            product.price,
+            product.quantity,
+            product.expiry_date,
+            reason,
+            date.today()
+        ])
+
+
 
 # ===================== Product =====================
 class Product:
@@ -35,6 +69,8 @@ class ShopSystem:
     def __init__(self):
         self.products = []
         self.sales = []
+
+        init_removed_products_file()
 
     # ---------- Load & Save ----------
     def load_products(self, filename="products.csv"):
@@ -231,9 +267,20 @@ class ShopSystem:
         print(f"\nTOTAL REVENUE: {total_revenue}")
 
     def remove_expired_products(self):
-        self.products = [p for p in self.products if p.expiry_date >= date.today()]
+        today = date.today()
+        remaining_products = []
+
+        for product in self.products:
+            expiry = datetime.strptime(product.expiry_date, "%Y-%m-%d").date()
+
+            if expiry < today:
+                log_removed_product(product, "Expired")
+            else:
+                remaining_products.append(product)
+
+        self.products = remaining_products
         self.save_products()
-        print("Expired products removed.")
+        print("Expired products removed and logged successfully.")
 
     # ---------- Menu ----------
     def run(self):
