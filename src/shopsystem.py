@@ -271,7 +271,11 @@ class ShopSystem:
         remaining_products = []
 
         for product in self.products:
-            expiry = datetime.strptime(product.expiry_date, "%Y-%m-%d").date()
+            # Handle both string and date expiry formats
+            if isinstance(product.expiry_date, str):
+                expiry = datetime.strptime(product.expiry_date, "%Y-%m-%d").date()
+            else:
+                expiry = product.expiry_date
 
             if expiry < today:
                 log_removed_product(product, "Expired")

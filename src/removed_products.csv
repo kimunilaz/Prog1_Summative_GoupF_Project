@@ -1,1 +1,3 @@
 product_id,batch_number,name,price,quantity,expiry_date,removal_reason,removal_date
+P003,B001,Bread,1200.0,15,2026-01-10,Expired,2026-01-14
+P005,B001,Eggs,800.0,30,2026-01-12,Expired,2026-01-14
