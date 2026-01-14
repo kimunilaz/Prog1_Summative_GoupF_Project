@@ -157,16 +157,23 @@ class ShopSystem:
 
     def add_product(self):
         suggested_id = self.suggest_next_product_id()
-        pid = input(f"Product ID [{suggested_id}]: ").strip()
+        pid = input(f"Product ID [suggested ID:{suggested_id}]: ").strip()
         if not pid:
             pid = suggested_id
 
-        batch = input("Batch number: ").strip()
+        batch = input("Batch number (e.g: BOO1, B002, ...): ").strip()
         name = input("Name: ").strip()
 
         if not pid or not batch or not name:
             print("Product ID, batch number, and name cannot be empty.")
             return
+
+        # Prevent same ID with different product name
+        for p in self.products:
+            if p.product_id == pid and p.name.lower() != name.lower():
+                print("Error: This product ID is already used for a different product.")
+                return2
+                
 
         try:
             price = float(input("Price: "))
@@ -185,12 +192,6 @@ class ShopSystem:
         except ValueError:
             print("Invalid expiry date format.")
             return
-
-        # Prevent same ID with different product name
-        for p in self.products:
-            if p.product_id == pid and p.name.lower() != name.lower():
-                print("Error: This product ID is already used for a different product.")
-                return
 
         # Merge ONLY if everything matches (ID + batch + name + price)
         for p in self.products:

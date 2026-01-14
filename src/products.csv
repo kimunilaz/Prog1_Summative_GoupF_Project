@@ -2,3 +2,4 @@ product_id,batch_number,name,price,quantity,expiry_date
 P001,B001,Sugar,2500.0,10,2026-12-31
 P002,B001,Milk,1500.0,20,2026-01-15
 P004,B001,Butter,3500.0,5,2026-03-05
+P005,B002,Oats,230.0,32,2029-02-02
